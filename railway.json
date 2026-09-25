@@ -1,0 +1,11 @@
+# Railway.app Configuration
+# Deploys both backend (Java Docker) and frontend from one repo
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "backend/Dockerfile"
+
+[deploy]
+startCommand = "java -jar app.jar"
+healthcheckPath = "/api-docs"
+restartPolicyType = "ON_FAILURE"
