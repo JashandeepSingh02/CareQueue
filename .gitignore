@@ -1,0 +1,32 @@
+# Backend
+backend/target/
+backend/.env
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Environment Files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE & Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.iml
+
+# OS Files
+.DS_Store
+Thumbbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Secrets reference file
+MY_SECRETS_DO_NOT_PUSH.txt

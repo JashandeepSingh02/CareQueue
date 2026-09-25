@@ -1,0 +1,50 @@
+# Render.com Blueprint — deploys backend + frontend from one repo
+# Docs: https://docs.render.com/blueprint-spec
+
+services:
+  # ── Backend: Java Spring Boot (Docker) ──
+  - type: web
+    name: carequeue-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    region: singapore   # closest to India
+    plan: free
+    envVars:
+      - key: MONGODB_URI
+        sync: false  # You'll enter this manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates a secure random value
+      - key: JWT_EXPIRATION_MS
+        value: "86400000"
+      - key: PORT
+        value: "8080"
+      - key: FRONTEND_URL
+        sync: false  # Set to your frontend URL after it deploys
+      - key: ADMIN_NAME
+        value: "CareQueue Admin"
+      - key: ADMIN_EMAIL
+        value: "admin@carequeue.com"
+      - key: ADMIN_PASSWORD
+        sync: false  # Enter securely in dashboard
+    healthCheckPath: /api-docs
+
+  # ── Frontend: React Vite (Static Site) ──
+  - type: web
+    name: carequeue-frontend
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    region: singapore
+    plan: free
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false  # Set to https://carequeue-backend.onrender.com/api
